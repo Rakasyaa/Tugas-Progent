@@ -5,7 +5,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.zip.*;
-import java.util.Enumeration;
 
 public class DownloadFileGUI extends JFrame {
     private final JTextField urlField = new JTextField();
@@ -17,9 +16,9 @@ public class DownloadFileGUI extends JFrame {
     private final JLabel fileLabel = new JLabel("File: -");
 
     public DownloadFileGUI() {
-        setTitle("Download File - Pemrograman Internet");
+        setTitle("Aplikasi Download File");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(680, 360);
+        setSize(720, 480);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -27,19 +26,14 @@ public class DownloadFileGUI extends JFrame {
         root.setBorder(new EmptyBorder(20, 20, 20, 20));
         root.setBackground(new Color(245, 247, 250));
 
-        JLabel title = new JLabel("File Downloader");
+        JLabel title = new JLabel("Aplikasi Download File");
         title.setFont(new Font("SansSerif", Font.BOLD, 26));
         title.setForeground(new Color(30, 58, 138));
-
-        JLabel subtitle = new JLabel("Download file dari URL dengan progress dan dukungan ZIP");
-        subtitle.setForeground(new Color(90, 98, 110));
 
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
         header.setOpaque(false);
         header.add(title);
-        header.add(Box.createVerticalStrut(4));
-        header.add(subtitle);
         root.add(header, BorderLayout.NORTH);
 
         JPanel form = new JPanel(new GridBagLayout());
@@ -49,27 +43,28 @@ public class DownloadFileGUI extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
 
         c.gridx = 0; c.gridy = 0; c.weightx = 0;
-        form.add(new JLabel("URL File"), c);
+        form.add(new JLabel("Link Download"), c);
         c.gridx = 1; c.weightx = 1;
         form.add(urlField, c);
 
         c.gridx = 0; c.gridy = 1; c.weightx = 0;
-        form.add(new JLabel("Folder"), c);
+        form.add(new JLabel("Folder Download"), c);
         c.gridx = 1; c.weightx = 1;
         folderField.setText(new File(System.getProperty("user.home"), "Downloads").getAbsolutePath());
         form.add(folderField, c);
-        c.gridx = 2; c.weightx = 0;
+        // c.gridx = 3; c.weightx = 0;
+        c.gridx = 1; c.gridy = 2; c.weightx = 0;
         form.add(browseButton, c);
 
-        c.gridx = 0; c.gridy = 2; c.gridwidth = 3;
+        c.gridx = 0; c.gridy = 3; c.gridwidth = 3;
         form.add(fileLabel, c);
 
-        c.gridy = 3;
+        c.gridy = 4;
         progressBar.setStringPainted(true);
         progressBar.setValue(0);
         form.add(progressBar, c);
 
-        c.gridy = 4;
+        c.gridy = 5;
         form.add(statusLabel, c);
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -175,8 +170,6 @@ public class DownloadFileGUI extends JFrame {
         }
     }
 
-    // Dasar implementasi mengikuti konsep DownloadFile:
-    // URL -> BufferedInputStream -> FileOutputStream.
     private void downloadFile(URL url, File output) throws IOException {
         HttpURLConnection connection = null;
         try {
