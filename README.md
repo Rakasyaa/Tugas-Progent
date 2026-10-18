@@ -1,24 +1,22 @@
 # Tugas 2 - Aplikasi Download File
 
-Aplikasi Java Swing untuk mengunduh file dari URL dengan:
-- Input URL
-- Pemilihan folder tujuan
-- Tombol Download
-- Progress Bar
-- Pesan setelah download selesai
-- Pengecekan file ZIP
-- Pilihan ekstraksi ZIP
-- Ekstraksi ZIP dengan pencegahan Zip Slip
+Program ini merupakan pengembangan dari contoh DownloadFile pada modul Praktikum Pemrograman Internet. Konsep dasar pengunduhan tetap menggunakan URL sebagai sumber file, stream untuk membaca data dari internet, dan FileOutputStream untuk menyimpan data ke komputer. Pengembangan utama pada tugas ini adalah penambahan GUI menggunakan Java Swing, progress bar, notifikasi, pengecekan ZIP, serta pilihan ekstraksi.
 
-## Dasar Implementasi
+## Fitur Program
 
-Program dikembangkan dari konsep `DownloadFile` pada modul Praktikum Pemrograman Internet dosen:
-https://ramads.github.io/mk/prognet/
+- GUI sebagai antarmuka aplikasi.
+- Input URL file yang akan didownload.
+- Pemilihan folder penyimpanan.
+- Tombol Download untuk memulai proses.
+- Progress Bar untuk menunjukkan persentase proses download.
+- Pesan pop-up ketika download berhasil.
+- Pengecekan apakah file yang selesai didownload merupakan ZIP.
+- Pilihan untuk mengekstrak atau tidak mengekstrak file ZIP.
+- Ekstraksi ZIP ke folder baru dengan nama file ZIP.
+- Validasi URL dan penanganan kesalahan koneksi/file.
 
 Konsep utama yang dipertahankan adalah:
 `URL -> BufferedInputStream -> FileOutputStream`
-
-GUI dibuat menggunakan Java Swing dan proses download dijalankan menggunakan `SwingWorker` agar antarmuka tidak freeze selama proses download.
 
 ## Menjalankan
 
@@ -35,4 +33,7 @@ Atau buka folder project pada IntelliJ IDEA / NetBeans / VS Code dengan Java Ext
 
 URL file dapat menggunakan file publik yang dapat diakses langsung melalui HTTP/HTTPS. Untuk pengujian ZIP, gunakan URL langsung yang berakhiran `.zip`.
 
-Catatan: beberapa website menggunakan halaman HTML/redirect/proteksi sehingga URL halaman biasa belum tentu merupakan URL file langsung.
+Berikut website yang dapat jadikan ujicoba:
+
+- https://filesamples.com/
+- https://getsamplefiles.com/download/zip/sample-1.zip
