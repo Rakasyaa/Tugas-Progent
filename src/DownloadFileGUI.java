@@ -50,9 +50,8 @@ public class DownloadFileGUI extends JFrame {
         c.gridx = 0; c.gridy = 1; c.weightx = 0;
         form.add(new JLabel("Folder Download"), c);
         c.gridx = 1; c.weightx = 1;
-        folderField.setText(new File(System.getProperty("user.home"), "Downloads").getAbsolutePath());
+        folderField.setText("E:/semester 7/Internet/code/Tugas 2 donwload GUI/Tugas2_DownloadFile");
         form.add(folderField, c);
-        // c.gridx = 3; c.weightx = 0;
         c.gridx = 1; c.gridy = 2; c.weightx = 0;
         form.add(browseButton, c);
 
@@ -110,13 +109,12 @@ public class DownloadFileGUI extends JFrame {
                 return;
             }
 
-            String fileName = getFileName(url);
+            String path = url.getPath();
+            String fileName = Paths.get(path).getFileName() == null ? "file" : Paths.get(path).getFileName().toString();
+            fileName = URLDecoder.decode(fileName, "UTF-8");
+
             File output = new File(folder, fileName);
 
-            downloadButton.setEnabled(false);
-            browseButton.setEnabled(false);
-            urlField.setEnabled(false);
-            progressBar.setIndeterminate(false);
             progressBar.setValue(0);
             fileLabel.setText("File: " + fileName);
             statusLabel.setText("Menghubungkan ke server...");
@@ -126,15 +124,6 @@ public class DownloadFileGUI extends JFrame {
                 protected File doInBackground() throws Exception {
                     downloadFile(url, output);
                     return output;
-                }
-
-                @Override
-                protected void process(java.util.List<Integer> chunks) {
-                    if (!chunks.isEmpty()) {
-                        int latest = chunks.get(chunks.size() - 1);
-                        progressBar.setValue(latest);
-                        statusLabel.setText("Progress: " + latest + "%");
-                    }
                 }
 
                 @Override
@@ -154,13 +143,13 @@ public class DownloadFileGUI extends JFrame {
                                 JOptionPane.INFORMATION_MESSAGE
                         );
 
-                        if (isZipFile(downloaded)) {
+                        if (downloaded.getName().toLowerCase().endsWith(".zip")) {
                             askExtract(downloaded);
                         }
                     } catch (Exception ex) {
                         progressBar.setValue(0);
                         statusLabel.setText("Download gagal.");
-                        showError("Download gagal:\n" + getRootMessage(ex));
+                        showError("Download gagal:\n" + ex.getMessage());
                     }
                 }
             }.execute();
@@ -171,20 +160,12 @@ public class DownloadFileGUI extends JFrame {
     }
 
     private void downloadFile(URL url, File output) throws IOException {
-        HttpURLConnection connection = null;
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
-            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(10000);
             connection.setReadTimeout(20000);
-            connection.setRequestProperty("User-Agent", "Java DownloadFileGUI/1.0");
             connection.connect();
-
-            int response = connection.getResponseCode();
-            if (response < 200 || response >= 300) {
-                throw new IOException("Server mengembalikan HTTP " + response
-                        + " " + connection.getResponseMessage());
-            }
 
             long totalBytes = connection.getContentLengthLong();
 
@@ -206,7 +187,7 @@ public class DownloadFileGUI extends JFrame {
                 }
             }
         } finally {
-            if (connection != null) connection.disconnect();
+            connection.disconnect();
         }
     }
 
@@ -215,34 +196,6 @@ public class DownloadFileGUI extends JFrame {
             progressBar.setValue(value);
             statusLabel.setText("Progress: " + value + "%");
         });
-    }
-
-    private String getFileName(URL url) {
-        String path = url.getPath();
-        String name = Paths.get(path).getFileName() == null ? "" : Paths.get(path).getFileName().toString();
-
-        if (name.isBlank()) {
-            name = "downloaded_file";
-        }
-
-        try {
-            name = URLDecoder.decode(name, "UTF-8");
-        } catch (Exception ignored) {}
-
-        return name;
-    }
-
-    private boolean isZipFile(File file) {
-        if (!file.isFile() || !file.getName().toLowerCase().endsWith(".zip")) {
-            return false;
-        }
-
-        try (ZipFile zip = new ZipFile(file)) {
-            zip.entries();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
     }
 
     private void askExtract(File zipFile) {
@@ -270,7 +223,7 @@ public class DownloadFileGUI extends JFrame {
                         JOptionPane.INFORMATION_MESSAGE
                 );
             } catch (Exception ex) {
-                showError("Ekstraksi gagal:\n" + getRootMessage(ex));
+                showError("Ekstraksi gagal:\n" + ex.getMessage());
             }
         }
     }
@@ -319,12 +272,6 @@ public class DownloadFileGUI extends JFrame {
                 "Error",
                 JOptionPane.ERROR_MESSAGE
         );
-    }
-
-    private String getRootMessage(Throwable e) {
-        Throwable current = e;
-        while (current.getCause() != null) current = current.getCause();
-        return current.getMessage() != null ? current.getMessage() : current.toString();
     }
 
     public static void main(String[] args) {

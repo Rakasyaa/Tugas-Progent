@@ -36,4 +36,6 @@ URL file dapat menggunakan file publik yang dapat diakses langsung melalui HTTP/
 Berikut website yang dapat jadikan ujicoba:
 
 - https://filesamples.com/
+- https://filesamples.com/samples/video/mkv/sample_960x540.mkv
+- https://filesamples.com/samples/video/mkv/sample_1280x720.mkv
 - https://getsamplefiles.com/download/zip/sample-1.zip
